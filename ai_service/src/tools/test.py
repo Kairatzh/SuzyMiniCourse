@@ -2,15 +2,11 @@ from langchain_together import Together
 from langchain_core.output_parsers import StrOutputParser
 from ai_service.src.prompt_engineering.templates import prompt_tests
 from ai_service.src.utils.states import State
+from ai_service.src.llm.together import llm_t
 
-llm = Together(
-    model="",
-    together_api_key="",
-    max_tokens=150,
-    temperature=0.3
-)
+
 output = StrOutputParser()
-chain = prompt_tests | llm | output
+chain = prompt_tests | llm_t | output
 
 def gentest_tool(state: State) -> State:
     """Возвращаем тест на определенную тему"""
