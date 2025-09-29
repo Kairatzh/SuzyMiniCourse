@@ -1,7 +1,7 @@
 from youtubesearchpython import VideosSearch
 from ai_service.src.utils.states import State
 
-def find_video(state: State) -> State:
+def video_tool(state: State) -> State:
     """Находим три видео подходящие по теме"""
     try:
         videos = VideosSearch(state.query, limit=3).result() 

@@ -49,3 +49,9 @@ prompt_tests = PromptTemplate(
     template=template_t,
     input_variables=["query"]
 )
+
+
+"""
+    Координатор управляет другими подагентами
+"""
+template_c = ""
