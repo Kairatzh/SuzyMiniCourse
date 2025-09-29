@@ -4,3 +4,4 @@ langchain_community
 pydantic
 uvicorn
 fastapi
+youtube-search-python
