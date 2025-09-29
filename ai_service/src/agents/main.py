@@ -17,3 +17,5 @@ workflow.add_edge(START ,"SearchVideos")
 workflow.add_edge("SearchVideos", END)
 workflow.add_edge("SearchVideos", END)
 workflow.add_edge("SearchVideos", END)
+
+agent_gen = workflow.compile
