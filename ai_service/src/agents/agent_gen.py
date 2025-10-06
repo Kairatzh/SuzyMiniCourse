@@ -1,8 +1,8 @@
 from langgraph.graph import StateGraph, END, START
 
-from ai_service.src.tools.summary import summary_tool
-from ai_service.src.tools.test import gentest_tool
-from ai_service.src.tools.videos import video_tool
+from ai_service.src.tools.agent_gen_tools.summary import summary_tool
+from ai_service.src.tools.agent_gen_tools.test import gentest_tool
+from ai_service.src.tools.agent_gen_tools.videos import video_tool
 from ai_service.src.utils.states import State
 
 from pydantic import BaseModel
