@@ -1,8 +1,9 @@
 from langchain_together import Together
 from langchain_core.output_parsers import StrOutputParser
+
 from ai_service.src.prompt_engineering.templates import prompt_tests
 from ai_service.src.utils.states import State
-from ai_service.src.llm.together import llm_t
+from ai_service.src.llm.openai import llm_t
 
 
 output = StrOutputParser()
