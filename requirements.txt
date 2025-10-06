@@ -5,3 +5,5 @@ pydantic
 uvicorn
 fastapi
 youtube-search-python
+langchain_openai
+langchain_together
