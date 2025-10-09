@@ -37,11 +37,11 @@ def generate_c(query: str) -> ToolOutput:
     )
 
 
-# if __name__ == "__main__":
-#     print("Проверка!")
-#     query = input("Введите тему: ")
-#     course = generate_c(query)
-#     print("\n=== РЕЗУЛЬТАТ ===")
-#     print("📘 Summary:", course.summary)
-#     print("🧩 Tests:", course.tests)
-#     print("🎥 Videos:", course.videos)
+if __name__ == "__main__":
+    print("Проверка!")
+    query = input("Введите тему: ")
+    course = generate_c(query)
+    print("\n=== РЕЗУЛЬТАТ ===")
+    print(" Summary:", course.summary)
+    print(" Tests:", course.tests)
+    print(" Videos:", course.videos)
