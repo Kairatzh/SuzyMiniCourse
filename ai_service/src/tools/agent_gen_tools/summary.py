@@ -16,3 +16,4 @@ def summary_tool(state: State) -> State:
     except Exception as e:
         state.summary = f"Ошибка при генерации конспекта: {str(e)}"
     return state
+

@@ -1,6 +1,6 @@
 openai:
   model: "gpt-3.5-turbo"
-  api_key: "${OPENAI_API_KEY}"  
+  api_key: ${OPENAI_API_KEY}  
   temperature: 0.3
   max_tokens: 500
 
@@ -12,6 +12,6 @@ together:
 
 openai_tests:
   model: "gpt-3.5-turbo"
-  api_key: "${OPENAI_API_KEY}"
+  api_key: ${OPENAI_API_KEY}
   temperature: 0.4
   max_tokens: 400

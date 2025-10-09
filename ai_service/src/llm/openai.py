@@ -1,11 +1,18 @@
 import os
+from dotenv import load_dotenv
 import yaml
 from langchain_openai import OpenAI
 
 config_path = os.path.normpath("C:/Users/User/Desktop/projects/SuzyMiniCourse/ai_service/config/model_config.yaml")
 
-with open(config_path, 'r', encoding='utf-8') as f:
-    config = yaml.safe_load(f)
+def load_configs(path=config_path):
+    load_dotenv()
+    with open(path, 'r') as f:
+        raw = f.read()
+    resolved = os.path.expandvars(raw)
+    return yaml.safe_load(resolved)
+
+config = load_configs()
 
 llm_s = OpenAI(
     model=config['openai']['model'],
