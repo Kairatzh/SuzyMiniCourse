@@ -10,8 +10,11 @@ output = StrOutputParser()
 chain = prompt_tests | llm_t | output
 
 def gentest_tool(state: State) -> State:
-    """Возвращаем тест на определенную тему"""
-    query = state.query
-    responce = chain.invoke({"query": query})
-    state.tests = responce
+    try:
+        query = state.query
+        response = chain.invoke({"query": query})
+        tests = [test.strip() for test in response.split('\n\n') if test.strip()]
+        state.tests = tests
+    except Exception as e:
+        state.tests = [f"Ошибка при генерации тестов: {str(e)}"]
     return state

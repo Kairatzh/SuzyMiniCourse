@@ -9,8 +9,10 @@ output = StrOutputParser()
 chain = prompt_summary | llm_s | output
 
 def summary_tool(state: State) -> State:
-    """Возвращаем краткий конспект"""
-    query = state.query
-    responce = chain.invoke({"query": query})
-    state.summary = responce
+    try:
+        query = state.query
+        response = chain.invoke({"query": query})
+        state.summary = response
+    except Exception as e:
+        state.summary = f"Ошибка при генерации конспекта: {str(e)}"
     return state

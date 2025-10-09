@@ -1,4 +1,21 @@
+import os
+import yaml
 from langchain_openai import OpenAI
 
-llm_s = OpenAI(model="", temperature=0.3, max_tokens=500, api_key="")
-llm_t = OpenAI(model="", temperature=0.4, max_tokens=400, api_key="")
+config_path = os.path.join(os.path.dirname(__file__), "C:/Users/User/Desktop/projects/SuzyMiniCourse/ai_service/config/model_config.yaml")
+with open(config_path, 'r', encoding='utf-8') as f:
+    config = yaml.safe_load(f)
+
+llm_s = OpenAI(
+    model=config['openai']['model'],
+    temperature=config['openai']['temperature'],
+    max_tokens=config['openai']['max_tokens'],
+    api_key=os.getenv('OPENAI_API_KEY', config['openai']['api_key'])
+)
+
+llm_t = OpenAI(
+    model=config['openai_tests']['model'],
+    temperature=config['openai_tests']['temperature'],
+    max_tokens=config['openai_tests']['max_tokens'],
+    api_key=os.getenv('OPENAI_API_KEY', config['openai_tests']['api_key'])
+)

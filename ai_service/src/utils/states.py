@@ -1,8 +1,9 @@
 from pydantic import BaseModel
+from typing import List, Optional
 
 class State(BaseModel):
     query: str
-    summary: str
-    tests: str
-    videos: str
+    summary: Optional[str] = None
+    tests: Optional[List[str]] = None
+    videos: Optional[List[str]] = None
 
