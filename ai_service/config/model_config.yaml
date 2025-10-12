@@ -18,7 +18,7 @@ openai_tests:
 
 openrouter:
   api_key: ${OPENROUTER_API_KEY}
-  model: "deepseek/deepseek-chat-v3.1:free"
-  max_tokens: 512
+  model: "tngtech/deepseek-r1t2-chimera:free"
+  max_tokens: 3000
   temperature: 0.7
 

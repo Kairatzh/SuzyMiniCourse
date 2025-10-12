@@ -1,4 +1,3 @@
-from langchain_together import Together
 from langchain_core.output_parsers import StrOutputParser
 
 from ai_service.src.prompt_engineering.templates import prompt_summary
@@ -17,7 +16,7 @@ def summary_tool(state: State) -> State:
         state.summary = f"Ошибка при генерации конспекта: {str(e)}"
     return state
 
-if __name__ == "__main__":
-    responce = chain.invoke({"query": "Present Simple"})
-    print(responce)
+# if __name__ == "__main__":
+#     responce = chain.invoke({"query": "Present Simple"})
+#     print(responce)
 

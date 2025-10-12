@@ -31,6 +31,6 @@ llm_s = create_openrouter_llm(
 
 llm_t = create_openrouter_llm(
     model_name=config["openrouter"]["model"],
-    max_tokens=400,
+    max_tokens=1500,
     temperature=0.4,
 )
