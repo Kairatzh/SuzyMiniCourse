@@ -1,7 +1,11 @@
-from ai_service.src.prompt_engineering.templates import prompt_tests
-from ai_service.src.utils.states import State
-from ai_service.src.llm.openrouter import llm_t
-from langchain_core.output_parsers import StrOutputParser
+"""
+    Модуль для генерации тестов на определенную тему
+"""
+
+from ai_service.src.prompt_engineering.templates import prompt_tests #Промпт для LLM
+from ai_service.src.utils.states import State #Состояние(State) для LLM
+from ai_service.src.llm.openrouter import llm_t #Сам LLMка.можно менять на Together, Openrouter, OpenAI, Claude
+from langchain_core.output_parsers import StrOutputParser #Оутпут парсер чтобы выводить структурированные ответы
 
 output = StrOutputParser()
 chain = prompt_tests | llm_t | output

@@ -1,8 +1,12 @@
-from langchain_core.output_parsers import StrOutputParser
+"""
+    Модуль для генерации конспектов на определенную тему 
+"""
 
-from ai_service.src.prompt_engineering.templates import prompt_summary
-from ai_service.src.utils.states import State
-from ai_service.src.llm.openrouter import llm_s
+from langchain_core.output_parsers import StrOutputParser #Оутпут парсер чтобы выводить структурированные ответы
+
+from ai_service.src.prompt_engineering.templates import prompt_summary #Промпт для LLM
+from ai_service.src.utils.states import State #Состояние(State) для LLM
+from ai_service.src.llm.openrouter import llm_s #Сам LLMка.можно менять на Together, Openrouter, OpenAI, Claude
 
 output = StrOutputParser()
 chain = prompt_summary | llm_s | output
