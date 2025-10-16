@@ -3,7 +3,7 @@
 """
 
 from typing import List, Dict
-from ai_service.src.prompt_engineering.templates import prompt_tests  # Промпт для LLM
+from ai_service.src.prompt_engineering.gen_templates import prompt_tests  # Промпт для LLM
 from ai_service.src.utils.states import State  # Состояние для LLM
 from ai_service.src.llm.openrouter import llm_t  # LLM: Together, Openrouter, OpenAI и др.
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema

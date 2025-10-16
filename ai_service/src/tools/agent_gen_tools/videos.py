@@ -3,7 +3,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from ai_service.src.utils.states import State
 from ai_service.src.llm.openrouter import llm_t
-from ai_service.src.prompt_engineering.templates import prompt_youtube
+from ai_service.src.prompt_engineering.gen_templates import prompt_youtube
 
 
 def video_tool(state: State) -> State:
