@@ -1,35 +1,59 @@
 """
-    Модуль для генерации тестов на определенную тему
+Модуль для генерации тестов на определенную тему
 """
 
-from ai_service.src.prompt_engineering.templates import prompt_tests #Промпт для LLM
-from ai_service.src.utils.states import State #Состояние(State) для LLM
-from ai_service.src.llm.openrouter import llm_t #Сам LLMка.можно менять на Together, Openrouter, OpenAI, Claude
-from langchain_core.output_parsers import StrOutputParser #Оутпут парсер чтобы выводить структурированные ответы
+from typing import List, Dict
+from ai_service.src.prompt_engineering.templates import prompt_tests  # Промпт для LLM
+from ai_service.src.utils.states import State  # Состояние для LLM
+from ai_service.src.llm.openrouter import llm_t  # LLM: Together, Openrouter, OpenAI и др.
+from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 
-output = StrOutputParser()
-chain = prompt_tests | llm_t | output
+schema = [
+    ResponseSchema(
+        name="title",
+        description="Название теста"
+    ),
+    ResponseSchema(
+        name="questions",
+        description="Список вопросов. Каждый вопрос - объект с 'text', 'options', 'correct_answer'"
+    )
+]
 
+parser = StructuredOutputParser.from_response_schemas(schema)
+format_instructions = parser.get_format_instructions()
+
+chain = prompt_tests | llm_t | parser
 
 def gentest_tool(state: State) -> State:
     try:
         query = state.query
-        response = chain.invoke({"query": query})
+        raw_response = chain.invoke({"query": query})
 
-        if not isinstance(response, str):
-            response = getattr(response, "content", str(response))
+        if not isinstance(raw_response, str):
+            raw_response = getattr(raw_response, "content", str(raw_response))
 
-        tests = [test.strip() for test in response.split("\n\n") if test.strip()]
-        state.tests = tests
+        response_obj: dict = parser.parse(raw_response)
+        state.tests = response_obj.get("questions", [])
     except Exception as e:
-        state.tests = [f"Ошибка при генерации тестов: {str(e)}"]
+        state.tests = [{"text": f"Ошибка при генерации: {e}", "options": [], "correct_answer": ""}]
 
     return state
+
 
 
 # if __name__ == "__main__":
 #     test_state = State(query="Present Simple")
 #     result = gentest_tool(test_state)
-#     print("\n=== Сгенерированные тесты ===")
-#     for t in result.tests:
-#         print(t)
+#     print(f"=== {getattr(result, 'title', 'Без названия')} ===\n")
+#     if result.tests:
+#         for i, q in enumerate(result.tests, start=1):
+#             text = q.get("text", "")
+#             options = q.get("options", [])
+#             correct = q.get("correct_answer", "")
+            
+#             print(f"Вопрос {i}: {text}")
+#             for idx, option in enumerate(options, start=1):
+#                 print(f"  {idx}. {option}")
+#             print(f"Правильный ответ: {correct}\n")
+#     else:
+#         print("Тесты не были сгенерированы.")
