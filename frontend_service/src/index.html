@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILL.AI - Развивайся, расти и стремись к бесконечности</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app"></div>
+    
+    <!-- Demo Mode Banner -->
+    <div id="demoBanner" style="display: none; position: fixed; top: 0; left: 0; right: 0; background: #667eea; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; text-align: center; z-index: 10000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+        <strong>🎮 Демо-режим</strong> - Фронтенд работает без backend. Все данные мокируются.
+    </div>
+    
+    <!-- Main application script -->
+    <script type="module" src="app.js"></script>
+    
+    <!-- Show demo banner if in demo mode -->
+    <script>
+        (function() {
+            const isDemo = localStorage.getItem('demo_mode') === 'true' || window.location.search.includes('demo=true');
+            if (isDemo) {
+                document.getElementById('demoBanner').style.display = 'block';
+                document.getElementById('app').style.paddingTop = '50px';
+            }
+        })();
+    </script>
+</body>
+</html>
+

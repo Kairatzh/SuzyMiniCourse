@@ -1,0 +1,20 @@
+# Fill AI - Main Requirements
+# Note: Each service has its own requirements.txt file
+# This file contains common dependencies for development
+
+# Core dependencies (used across services)
+pydantic==2.5.0
+python-dotenv==1.0.0
+pyyaml==6.0.1
+httpx==0.25.2
+
+# For development
+pytest==7.4.3
+pytest-asyncio==0.21.1
+black==23.11.0
+flake8==6.1.0
+
+# Note: Install service-specific requirements:
+# - backend_service/requirements.txt
+# - ai_service/requirements.txt
+# - telegram_bot/requirements.txt

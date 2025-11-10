@@ -1,0 +1,174 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: fill_ai_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-fill_ai}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # Neo4j Database
+  neo4j:
+    image: neo4j:5-community
+    container_name: fill_ai_neo4j
+    restart: always
+    environment:
+      NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-neo4j}
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "${NEO4J_USER:-neo4j}", "-p", "${NEO4J_PASSWORD:-neo4j}", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: fill_ai_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # Backend Service
+  backend:
+    build:
+      context: ./backend_service
+      dockerfile: Dockerfile
+    container_name: fill_ai_backend
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-fill_ai}
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-neo4j}
+      - AI_SERVICE_URL=http://ai_service:8000
+      - SECRET_KEY=${SECRET_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=8001
+      - DEBUG=${DEBUG:-false}
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend_service:/app
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8001 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # AI Service
+  ai_service:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: fill_ai_ai_service
+    restart: always
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - AI_SERVICE_HOST=0.0.0.0
+      - AI_SERVICE_PORT=8000
+      - DEBUG=${DEBUG:-false}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ai_service:/app
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # Telegram Bot
+  telegram_bot:
+    build:
+      context: ./telegram_bot
+      dockerfile: Dockerfile
+    container_name: fill_ai_telegram_bot
+    restart: always
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - BACKEND_URL=http://backend:8001
+      - AI_SERVICE_URL=http://ai_service:8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    depends_on:
+      backend:
+        condition: service_healthy
+      ai_service:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./telegram_bot:/app
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+volumes:
+  postgres_data:
+  neo4j_data:
+  neo4j_logs:
+  redis_data:
+
