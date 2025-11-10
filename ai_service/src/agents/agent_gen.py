@@ -58,7 +58,6 @@ def generate_c(query: str) -> State:
         return result
     except Exception as e:
         logger.error(f"Error in generate_c: {e}", exc_info=True)
-        # Возвращаем состояние с ошибкой
         error_state = State(query=query)
         error_state.chat_response = f"Произошла ошибка: {str(e)}"
         return error_state
