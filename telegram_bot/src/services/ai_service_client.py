@@ -19,7 +19,7 @@ class AIServiceClient:
     
     def __init__(self, base_url: str = AI_SERVICE_URL):
         self.base_url = base_url
-        self.timeout = 300.0  # Long timeout for AI generation
+        self.timeout = 300.0  
     
     async def generate_or_chat(self, query: str) -> Optional[Dict]:
         """Generate course or chat response"""

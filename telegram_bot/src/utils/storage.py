@@ -11,7 +11,6 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# Try to import Redis
 try:
     import redis
     REDIS_AVAILABLE = True
@@ -19,16 +18,13 @@ except ImportError:
     REDIS_AVAILABLE = False
     logger.warning("Redis not available, using in-memory storage")
 
-# In-memory fallback storage
 _user_tokens: Dict[int, str] = {}
 _user_states: Dict[int, Dict] = {}
-_processing_users: set = set()  # Track users currently processing requests
+_processing_users: set = set()  
 
-# Redis client (if available)
 _redis_client: Optional[redis.Redis] = None
 _use_redis = False
 
-# Initialize Redis if available
 if REDIS_AVAILABLE:
     try:
         redis_host = os.getenv("REDIS_HOST", "localhost")
@@ -42,7 +38,6 @@ if REDIS_AVAILABLE:
             decode_responses=True,
             socket_connect_timeout=2
         )
-        # Test connection
         _redis_client.ping()
         _use_redis = True
         logger.info("Storage using Redis")
@@ -58,7 +53,6 @@ def save_token(user_id: int, token: str, ttl: int = 86400):
             _redis_client.setex(f"token:{user_id}", ttl, token)
         except Exception as e:
             logger.error(f"Redis error saving token: {e}")
-            # Fallback to memory
             _user_tokens[user_id] = token
     else:
         _user_tokens[user_id] = token

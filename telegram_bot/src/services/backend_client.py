@@ -49,7 +49,7 @@ class BackendClient:
                 response = await client.post(
                     f"{self.base_url}/api/v1/users/login",
                     data={
-                        "username": email,  # OAuth2 uses username field for email
+                        "username": email, 
                         "password": password
                     }
                 )
@@ -80,7 +80,7 @@ class BackendClient:
     async def generate_course(self, token: str, query: str) -> Optional[Dict]:
         """Generate a course"""
         try:
-            async with httpx.AsyncClient(timeout=300.0) as client:  # Longer timeout for generation
+            async with httpx.AsyncClient(timeout=300.0) as client:  
                 response = await client.post(
                     f"{self.base_url}/api/v1/courses/generate",
                     headers={"Authorization": f"Bearer {token}"},

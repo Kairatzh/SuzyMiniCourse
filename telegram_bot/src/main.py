@@ -22,7 +22,6 @@ from telegram_bot.src.handlers.commands import (
 
 load_dotenv()
 
-# Configure logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO
@@ -47,23 +46,22 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = query.data
     user_id = update.effective_user.id
     
-    # Handle based on callback data
     if data == "generate":
         from telegram_bot.src.utils.storage import get_token
         token = get_token(user_id)
         if not token:
-            await query.message.reply_text("❌ Вы не авторизованы.\nИспользуйте /login для входа.")
+            await query.message.reply_text(" Вы не авторизованы.\nИспользуйте /login для входа.")
             return
         from telegram_bot.src.utils.storage import save_state
         save_state(user_id, {"action": "generate", "step": "query"})
-        await query.message.reply_text("📝 *Создание курса*\n\nВведите тему курса:", parse_mode="Markdown")
+        await query.message.reply_text(" *Создание курса*\n\nВведите тему курса:", parse_mode="Markdown")
     elif data == "my_courses":
         from telegram_bot.src.utils.storage import get_token
         token = get_token(user_id)
         if not token:
-            await query.message.reply_text("❌ Вы не авторизованы.\nИспользуйте /login для входа.")
+            await query.message.reply_text(" Вы не авторизованы.\nИспользуйте /login для входа.")
             return
-        await query.message.reply_text("⏳ Загружаю ваши курсы...")
+        await query.message.reply_text(" Загружаю ваши курсы...")
         from telegram_bot.src.services.backend_client import BackendClient
         backend = BackendClient()
         courses = await backend.get_my_courses(token)
@@ -73,11 +71,11 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "chat":
         from telegram_bot.src.utils.storage import save_state
         save_state(user_id, {"action": "chat", "step": "query"})
-        await query.message.reply_text("💬 *Чат с AI*\n\nЗадайте ваш вопрос:", parse_mode="Markdown")
+        await query.message.reply_text(" *Чат с AI*\n\nЗадайте ваш вопрос:", parse_mode="Markdown")
     elif data == "login":
         from telegram_bot.src.utils.storage import save_state
         save_state(user_id, {"action": "login", "step": "email"})
-        await query.message.reply_text("🔐 *Вход в систему*\n\nВведите ваш email:", parse_mode="Markdown")
+        await query.message.reply_text(" *Вход в систему*\n\nВведите ваш email:", parse_mode="Markdown")
 
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -87,7 +85,7 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update and update.effective_message:
         try:
             await update.effective_message.reply_text(
-                "❌ Произошла ошибка. Попробуйте позже или используйте /help."
+                " Произошла ошибка. Попробуйте позже или используйте /help."
             )
         except Exception as e:
             logger.error(f"Error sending error message: {e}")
@@ -97,10 +95,8 @@ def main():
     """Main function to run the bot"""
     logger.info("Starting Telegram Bot...")
     
-    # Create application
     application = Application.builder().token(TOKEN).build()
     
-    # Add command handlers
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("register", register_command))
@@ -111,16 +107,12 @@ def main():
     application.add_handler(CommandHandler("chat", chat_command))
     application.add_handler(CommandHandler("logout", logout_command))
     
-    # Add callback query handler
     application.add_handler(CallbackQueryHandler(callback_handler))
     
-    # Add message handler (must be last)
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
-    # Add error handler
     application.add_error_handler(error_handler)
     
-    # Start bot
     logger.info("Bot is running. Press Ctrl+C to stop.")
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 

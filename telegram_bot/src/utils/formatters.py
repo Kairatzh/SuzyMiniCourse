@@ -3,9 +3,8 @@ Message formatters for Telegram
 """
 from typing import List, Dict
 
-# Telegram message limits
 MAX_MESSAGE_LENGTH = 4096
-SAFE_MESSAGE_LENGTH = 4000  # Leave some margin
+SAFE_MESSAGE_LENGTH = 4000 
 
 
 def split_message(text: str, max_length: int = SAFE_MESSAGE_LENGTH) -> List[str]:
@@ -23,13 +22,10 @@ def split_message(text: str, max_length: int = SAFE_MESSAGE_LENGTH) -> List[str]
             chunks.append(remaining)
             break
         
-        # Try to split at newline
         split_at = remaining.rfind('\n', 0, max_length)
         if split_at == -1:
-            # No newline found, split at space
             split_at = remaining.rfind(' ', 0, max_length)
             if split_at == -1:
-                # No space found, force split
                 split_at = max_length
         
         chunks.append(remaining[:split_at].strip())
@@ -45,28 +41,26 @@ def format_course(course: Dict) -> List[str]:
     summary = course.get("summary", "")
     categories = course.get("categories", [])
     
-    # First message - header
-    header = f"📚 *{title}*\n\n"
+    header = f" *{title}*\n\n"
     
     if topic:
-        header += f"📌 Тема: {topic}\n"
+        header += f" Тема: {topic}\n"
     
     if categories:
-        header += f"🏷️ Категории: {', '.join(categories)}\n"
+        header += f" Категории: {', '.join(categories)}\n"
     
     tests = course.get("tests", [])
     if tests:
-        header += f"\n🧩 Тестов: {len(tests)}\n"
+        header += f"\n Тестов: {len(tests)}\n"
     
     videos = course.get("videos", [])
     if videos:
-        header += f"🎥 Видео: {len(videos)}\n"
+        header += f" Видео: {len(videos)}\n"
     
     messages = [header]
     
-    # Summary message
     if summary:
-        summary_text = f"📝 *Конспект:*\n\n{summary}"
+        summary_text = f" *Конспект:*\n\n{summary}"
         summary_chunks = split_message(summary_text)
         messages.extend(summary_chunks)
     
@@ -76,9 +70,9 @@ def format_course(course: Dict) -> List[str]:
 def format_course_list(courses: List[Dict]) -> str:
     """Format list of courses"""
     if not courses:
-        return "📭 У вас пока нет курсов.\n\nИспользуйте /generate для создания нового курса."
+        return " У вас пока нет курсов.\n\nИспользуйте /generate для создания нового курса."
     
-    text = f"📚 *Ваши курсы ({len(courses)}):*\n\n"
+    text = f" *Ваши курсы ({len(courses)}):*\n\n"
     for i, course in enumerate(courses[:10], 1):  # Limit to 10
         title = course.get("title", "Без названия")
         course_id = course.get("id", "")
@@ -96,9 +90,9 @@ def format_tests(tests: List[Dict]) -> List[str]:
         return ["Тесты отсутствуют"]
     
     messages = []
-    current_message = "🧩 *Тестовые вопросы:*\n\n"
+    current_message = " *Тестовые вопросы:*\n\n"
     
-    for i, test in enumerate(tests[:10], 1):  # Limit to 10
+    for i, test in enumerate(tests[:10], 1):  
         question = test.get("text", "")
         options = test.get("options", [])
         correct = test.get("correct_answer", "")
@@ -109,7 +103,6 @@ def format_tests(tests: List[Dict]) -> List[str]:
             question_text += f"{marker} {j}. {option}\n"
         question_text += "\n"
         
-        # Check if adding this question would exceed limit
         if len(current_message) + len(question_text) > SAFE_MESSAGE_LENGTH:
             messages.append(current_message.strip())
             current_message = question_text
@@ -131,7 +124,7 @@ def format_videos(videos: List[str]) -> str:
         return "Видео отсутствуют"
     
     text = "🎥 *Видео материалы:*\n\n"
-    for i, video_url in enumerate(videos[:3], 1):  # Limit to 3
+    for i, video_url in enumerate(videos[:3], 1):  
         text += f"{i}. {video_url}\n"
     
     return text

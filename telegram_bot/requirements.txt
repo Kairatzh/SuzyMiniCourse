@@ -1,17 +1,12 @@
 # Telegram Bot Dependencies
 
-# Telegram Bot API
 python-telegram-bot==20.7
 
-# HTTP Client
 httpx==0.25.2
 
-# Environment variables
 python-dotenv==1.0.0
 
-# Redis for storage
 redis==5.0.1
 
-# Utilities
 pydantic==2.5.0
 
