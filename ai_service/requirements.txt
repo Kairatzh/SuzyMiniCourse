@@ -1,21 +1,21 @@
 # AI Service Dependencies
 
-langchain==0.1.0
-langgraph==0.0.20
-langchain-community==0.0.10
-langchain-core==0.1.10
-langchain-openai==0.0.2
+langchain
+langgraph
+langchain-community
+langchain-core
+langchain-openai
 
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-python-multipart==0.0.6
+fastapi
+uvicorn[standard]
+python-multipart
 
-youtube-search-python==1.6.6
+youtube-search-python
 
-python-dotenv==1.0.0
-pyyaml==6.0.1
+python-dotenv
+pyyaml
 
-pydantic==2.5.0
-httpx==0.25.2
+pydantic
+httpx
 
-tenacity==8.2.3
+tenacity
