@@ -7,7 +7,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
 from ai_service.src.prompt_engineering.gen_templates import prompt_tests
 from ai_service.src.utils.states import State
 from ai_service.src.llm.openrouter import llm_t
-from langchain.output_parsers import StructuredOutputParser, ResponseSchema
+from langchain_core.output_parsers import StructuredOutputParser, ResponseSchema
 
 logger = logging.getLogger(__name__)
 

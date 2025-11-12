@@ -62,12 +62,12 @@ def generate_c(query: str) -> State:
         error_state.chat_response = f"Произошла ошибка: {str(e)}"
         return error_state
 
-# if __name__ == "__main__":
-#     print("Проверка!")
-#     query = input("Введите тему: ")
-#     course = generate_c(query)
-#     print("\n=== РЕЗУЛЬТАТ ===")
-#     print(" Summary:", course.summary)
-#     print(" Tests:", course.tests)
-#     print(" Videos:", course.videos)
+if __name__ == "__main__":
+    print("Проверка!")
+    query = input("Введите тему: ")
+    course = generate_c(query)
+    print("\n=== РЕЗУЛЬТАТ ===")
+    print(" Summary:", course.summary)
+    print(" Tests:", course.tests)
+    print(" Videos:", course.videos)
 

@@ -25,9 +25,7 @@ def coordinator_tool(state: State) -> State:
         query = state.query
         response = chain.invoke({"query": query})
         
-        # Парсим JSON ответ
         try:
-            # Убираем возможные markdown код блоки
             response_clean = response.strip()
             if response_clean.startswith("```json"):
                 response_clean = response_clean[7:]
@@ -47,7 +45,6 @@ def coordinator_tool(state: State) -> State:
             
         except json.JSONDecodeError as e:
             logger.warning(f"Failed to parse coordinator response as JSON: {e}. Response: {response}")
-            # Fallback: пытаемся определить по ключевым словам
             query_lower = query.lower()
             if any(word in query_lower for word in ["курс", "тест", "конспект", "видео", "создай", "сделай", "нужен"]):
                 state.intent = "course_generation"
@@ -57,7 +54,6 @@ def coordinator_tool(state: State) -> State:
         
     except Exception as e:
         logger.error(f"Error in coordinator_tool: {e}", exc_info=True)
-        # По умолчанию считаем чатом
         state.intent = "chat"
     
     return state
