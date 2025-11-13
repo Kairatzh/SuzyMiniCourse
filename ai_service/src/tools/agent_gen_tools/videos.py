@@ -118,7 +118,7 @@ def video_tool(state: State) -> State:
     return state
 
 
-# if __name__ == "__main__":
-#     from ai_service.src.utils.states import State
-#     state = State(query="Present Simple")
-#     video_tool(state)
+if __name__ == "__main__":
+    from ai_service.src.utils.states import State
+    state = State(query="Present Simple")
+    video_tool(state)

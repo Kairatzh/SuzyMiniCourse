@@ -7,7 +7,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
 from ai_service.src.prompt_engineering.gen_templates import prompt_tests
 from ai_service.src.utils.states import State
 from ai_service.src.llm.openrouter import llm_t
-from langchain_core.output_parsers import StructuredOutputParser, ResponseSchema
+from langchain_classic.output_parsers import StructuredOutputParser, ResponseSchema
 
 logger = logging.getLogger(__name__)
 
@@ -126,21 +126,21 @@ def gentest_tool(state: State) -> State:
 
     return state
 
+##TODO: переделать на langchain_core.output_parsers
 
-
-# if __name__ == "__main__":
-#     test_state = State(query="Present Simple")
-#     result = gentest_tool(test_state)
-#     print(f"=== {getattr(result, 'title', 'Без названия')} ===\n")
-#     if result.tests:
-#         for i, q in enumerate(result.tests, start=1):
-#             text = q.get("text", "")
-#             options = q.get("options", [])
-#             correct = q.get("correct_answer", "")
+if __name__ == "__main__":
+    test_state = State(query="Present Simple")
+    result = gentest_tool(test_state)
+    print(f"=== {getattr(result, 'title', 'Без названия')} ===\n")
+    if result.tests:
+        for i, q in enumerate(result.tests, start=1):
+            text = q.get("text", "")
+            options = q.get("options", [])
+            correct = q.get("correct_answer", "")
             
-#             print(f"Вопрос {i}: {text}")
-#             for idx, option in enumerate(options, start=1):
-#                 print(f"  {idx}. {option}")
-#             print(f"Правильный ответ: {correct}\n")
-#     else:
-#         print("Тесты не были сгенерированы.")
+            print(f"Вопрос {i}: {text}")
+            for idx, option in enumerate(options, start=1):
+                print(f"  {idx}. {option}")
+            print(f"Правильный ответ: {correct}\n")
+    else:
+        print("Тесты не были сгенерированы.")

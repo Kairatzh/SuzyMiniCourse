@@ -4,7 +4,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
-# Относительный путь от текущего файла
 CONFIG_DIR = Path(__file__).parent.parent.parent / "config"
 config_path = CONFIG_DIR / "model_config.yaml"
 
